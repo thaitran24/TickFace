@@ -1,0 +1,82 @@
+[
+    {
+        "id": "thai_k20",
+        "name": "Tr\u1ea7n Trung Th\u00e1i",
+        "gen": "K20"
+    },
+    {
+        "id": "duc_anh_k21",
+        "name": "B\u00f9i \u0110\u1ee9c Anh",
+        "gen": "K21"
+    },
+    {
+        "id": "hien_k20",
+        "name": "Ph\u1ea1m Th\u1ecb Hi\u1ec1n",
+        "gen": "K20"
+    },
+    {
+        "id": "huy_k19",
+        "name": "V\u0169 Nguy\u1ec5n Minh Huy",
+        "gen": "K19"
+    },
+    {
+        "id": "kha",
+        "name": "Hu\u1ef3nh Ho\u00e0ng Kha",
+        "gen": ""
+    },
+    {
+        "id": "kiet_k20",
+        "name": "Tr\u1ea7n H\u00e0 Tu\u1ea5n Ki\u1ec7t",
+        "gen": "K20"
+    },
+    {
+        "id": "nhan_k19",
+        "name": "C\u00f9 \u0110\u1ed7 Thanh Nh\u00e2n",
+        "gen": "K19"
+    },
+    {
+        "id": "nhan_k21",
+        "name": "H\u1ed3ng Thi\u1ec7n Nh\u00e2n",
+        "gen": "K21"
+    },
+    {
+        "id": "quan_k19",
+        "name": "Nguy\u1ec5n L\u1eadp Qu\u00e2n",
+        "gen": "K19"
+    },
+    {
+        "id": "quan_k19",
+        "name": "Nguy\u1ec5n L\u1eadp Qu\u00e2n",
+        "gen": "K19"
+    },
+    {
+        "id": "thuy_k20",
+        "name": "V\u0129nh Th\u1ee5y",
+        "gen": "K20"
+    },
+    {
+        "id": "tien_k20",
+        "name": "H\u1ed3 Tr\u01b0\u01a1ng \u0110\u1ee9c Ti\u1ebfn",
+        "gen": "K20"
+    },
+    {
+        "id": "tram_k19",
+        "name": "L\u00ea Nguy\u1ec5n Qu\u1ef3nh Tr\u00e2m",
+        "gen": "K19"
+    },
+    {
+        "id": "vinh_k19",
+        "name": "Nguy\u1ec5n Ph\u00fac Vinh",
+        "gen": "K19"
+    },
+    {
+        "id": "vu_k21",
+        "name": "Ph\u1ea1m V\u0103n Nh\u1eadt V\u0169",
+        "gen": "K21"
+    },
+    {
+        "id": "stranger",
+        "name": "Visitor",
+        "gen": ""
+    }
+]
