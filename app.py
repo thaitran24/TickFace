@@ -5,11 +5,10 @@ from gui.checkin_screen import CheckinScreenWidget
 from gui.realname_screen import RealnameScreenWidget
 from gui.thanks_screen import ThanksScreenWidget
 from gui.canvas import MyCanvas
-from tkinter import Image, Tk
+from tkinter import Tk
 from facereglib.facereg.recognizer import Recognizer
 from database.database import Database
 from api import slack_post
-from PIL import Image
 import time
 import cv2
 import datetime
@@ -22,32 +21,23 @@ class RecognitionScreen():
         self.model = Recognizer(model_name=model_name, db_represent_path=representation_folder)
         
     def startRecognition(self):
-        self.capture = cv2.VideoCapture(0)
-        self.initFrameSettings()
-        self.initFaceInFrameSettings()
         self.update()
-
-    def initFrameSettings(self):
-        self.inFrameTime = 3
-
-        capW = self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)
-        capH = self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        self.w = int(capW * 0.6)
-        self.h = int(capH * 0.8)
-        self.x = int((capW - self.w) / 2)
-        self.y = int((capH - self.h) / 2)
-
-        self.in_area = 0.4 * self.w * self.h
-
-    def initFaceInFrameSettings(self):
-        self.inRecogPhase = False
-        self.frameIncludeFace = False
-        self.inFrameTic = time.time()
-        self.tic = time.time()
-        self.toc = time.time()
-        self.now = datetime.datetime.now()
     
     def update(self, *args):
+        self.capture = cv2.VideoCapture(0)
+        capW = self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)
+        capH = self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        w = int(capW * 0.6)
+        h = int(capH * 0.8)
+        x = int((capW - w) / 2)
+        y = int((capH - h) / 2)
+        inArea = 0.4 * w * h
+
+        inFrameTime = 3
+        frameIncludeFace = False
+        inFrameTic = time.time()
+        currTime = datetime.datetime.now()
+
         while True:
             success, frame = self.capture.read()
             if not success:
@@ -55,37 +45,28 @@ class RecognitionScreen():
             
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             self.recogScreenWids.setFrame(frame)
-            imgFrame = frame[self.y : self.y + self.h, self.x : self.x + self.w]
+            imgFrame = frame[y : y + h, x : x + w]
 
-            if not self.inRecogPhase:
-                detected_faces, regions = self.model.detector.detect(imgFrame)
-            else:
-                detected_faces = []
+            detectedFaces, regions = self.model.detector.detect(imgFrame)
+            detectedFacesLen = len(detectedFaces)
             
-            detected_face_len = len(detected_faces)
+            if detectedFacesLen == 0:
+                inFrameTic = time.time()
             
-            if detected_face_len == 0:
-                self.inFrameTic = time.time()
-            
-            if detected_face_len > 0:
-                face = detected_faces[0]
-                if (face.shape[0] * face.shape[1] > self.in_area):
-                    in_frame_toc = time.time()
-                    if (in_frame_toc - self.inFrameTic > self.inFrameTime):
-                        self.frameIncludeFace = True
+            if detectedFacesLen > 0:
+                face = detectedFaces[0]
+                if (face.shape[0] * face.shape[1] > inArea):
+                    inFrameToc = time.time()
+                    if (inFrameToc - inFrameTic > inFrameTime):
+                        frameIncludeFace = True
                 else:
-                    self.inFrameTic = time.time()
+                    inFrameTic = time.time()
 
-            if detected_face_len > 0 and self.frameIncludeFace and not self.inRecogPhase:
-                self.inRecogPhase = True
-                self.tic = time.time()
-                self.now = datetime.datetime.now()
-            
-            if self.inRecogPhase:
-                face = detected_faces[0]
-                self.toc = time.time()
+            if frameIncludeFace:
+                currTime = datetime.datetime.now()
+                face = detectedFaces[0]
                 self.recogInfo = Database().getRecogInfo(self.model.recognize(face))
-                self.recogInfo['time'] = self.now
+                self.recogInfo['time'] = currTime
                 self.imgFrame = imgFrame
                 utils.JPGtoPNG(imgFrame)
                 self.release()
@@ -107,11 +88,13 @@ class App():
     def initLayout(self):
         self.window = Tk()
         self.window.title('TickFace')
-        self.window.geometry("1024x768")
-        self.window.configure(bg = "#00EFFF")
+        self.window.geometry('1024x768')
+        self.window.configure(bg='#00EFFF')
         self.window.resizable(False, False)
+
         self.canvas = MyCanvas()
         self.canvas.place(x=0, y=0)
+
         self.mainScreenWids = MainScreenWidget(self.canvas)
         self.mainScreenWids.setWindow(self.window)
         self.mainScreenWids.setTransfer(self.MainScreenToRecogScreen)
