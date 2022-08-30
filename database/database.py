@@ -2,8 +2,8 @@ import json
 import os
 import csv
 import utils
-from cv2 import imwrite
 from pathlib import Path
+from PIL import Image
 class Member():
     def __init__(self, id, name, gen):
         self.id = id
@@ -54,7 +54,7 @@ class Database():
         with open(logFile, 'a') as file:
             writer = csv.writer(file)
             writer.writerow(log)
-            imwrite(imgFile, img)
+            Image.fromarray(img).save(imgFile)
 
     def getRecogInfo(self, df):
         if len(df.index > 0):
