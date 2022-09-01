@@ -21,12 +21,12 @@ from facereglib.utils import facereg_utils, distance
 class Recognizer():
     def __init__(self, model_name, db_represent_path=None) -> None:
         reg_models = {
-            'vggface': vggface.loadModel,
-            'deepface': deepface.loadModel,
-            'deepid': deepid.loadModel,
-            'arcface': arcface.loadModel,
-            'facenet': facenet.loadModel,
-            'facenet512': facenet512.loadModel
+            'VGG=Face': vggface.loadModel,
+            'DeepFace': deepface.loadModel,
+            'DeepID': deepid.loadModel,
+            'ArcFace': arcface.loadModel,
+            'Facenet': facenet.loadModel,
+            'Facenet512': facenet512.loadModel
         }
         base_model = reg_models.get(model_name)
         if not base_model:
@@ -100,7 +100,7 @@ class Recognizer():
     def buildDatabase(self, db_path, db_represent_path):
         if not os.path.isdir(db_path):
             print("Database path db_path - ", db_path, " not exist")
-            return
+            return False
 
         file_name = 'representation.pkl'
         if os.path.exists(db_represent_path + '/' + file_name):
@@ -132,6 +132,7 @@ class Recognizer():
         pickle.dump(representations, representation_file)
         self.is_db_build = True
         representation_file.close()
+        return True
     
 
     def recognize(self, img, threshold=0.3, distance_metric='cosine', force_detection=True):

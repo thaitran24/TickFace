@@ -1,5 +1,0 @@
-{
-    "model_name": "facenet",
-    "database_folder": "database_images/",
-    "representation_folder": "represent/"
-} 

@@ -1,85 +1,15 @@
 from gui.main_screen import MainScreenWidget
-from gui.recognition_screen import RecognitionScreenWidget
+from gui.recognition_screen import RecognitionScreen
 from gui.identity_screen import IdentityScreenWidget
 from gui.checkin_screen import CheckinScreenWidget
 from gui.realname_screen import RealnameScreenWidget
 from gui.thanks_screen import ThanksScreenWidget
+from gui.build_screen import BuildScreenWidget
 from gui.canvas import MyCanvas
 from tkinter import Tk
-from facereglib.facereg.recognizer import Recognizer
-from database.database import Database
+from database.database import Database, ModelBuilder
 from api import slack_post
-import time
-import cv2
-import datetime
 import utils
-
-class RecognitionScreen():
-    def __init__(self, window):
-        self.recogScreenWids = RecognitionScreenWidget(window)
-        model_name, database_folder, representation_folder = utils.getModelInfo()
-        self.model = Recognizer(model_name=model_name, db_represent_path=representation_folder)
-        
-    def startRecognition(self):
-        self.update()
-    
-    def update(self, *args):
-        self.capture = cv2.VideoCapture(0)
-        capW = self.capture.get(cv2.CAP_PROP_FRAME_WIDTH)
-        capH = self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
-        w = int(capW * 0.6)
-        h = int(capH * 0.8)
-        x = int((capW - w) / 2)
-        y = int((capH - h) / 2)
-        inArea = 0.4 * w * h
-
-        inFrameTime = 3
-        frameIncludeFace = False
-        inFrameTic = time.time()
-        currTime = datetime.datetime.now()
-
-        while True:
-            success, frame = self.capture.read()
-            if not success:
-                break
-            
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            self.recogScreenWids.setFrame(frame)
-            imgFrame = frame[y : y + h, x : x + w]
-
-            detectedFaces, regions = self.model.detector.detect(imgFrame)
-            detectedFacesLen = len(detectedFaces)
-            
-            if detectedFacesLen == 0:
-                inFrameTic = time.time()
-            
-            if detectedFacesLen > 0:
-                face = detectedFaces[0]
-                if (face.shape[0] * face.shape[1] > inArea):
-                    inFrameToc = time.time()
-                    if (inFrameToc - inFrameTic > inFrameTime):
-                        frameIncludeFace = True
-                else:
-                    inFrameTic = time.time()
-
-            if frameIncludeFace:
-                currTime = datetime.datetime.now()
-                face = detectedFaces[0]
-                self.recogInfo = Database().getRecogInfo(self.model.recognize(face))
-                self.recogInfo['time'] = currTime
-                self.imgFrame = imgFrame
-                utils.JPGtoPNG(imgFrame)
-                self.release()
-    
-    def release(self):
-        self.capture.release()
-        cv2.destroyAllWindows()
-        self.recogScreenWids.disable()
-        
-    def getRecogInfo(self):
-        return self.recogInfo, self.imgFrame
-
-
 class App():
     def __init__(self):
         self.initLayout()
@@ -97,8 +27,13 @@ class App():
 
         self.mainScreenWids = MainScreenWidget(self.canvas)
         self.mainScreenWids.setWindow(self.window)
-        self.mainScreenWids.setTransfer(self.MainScreenToRecogScreen)
+        self.mainScreenWids.setStartTransfer(self.MainScreenToRecogScreen)
+        self.mainScreenWids.setBuildTransfer(self.MainSreenToBuildScreen)
         
+        self.buildScreenWids = BuildScreenWidget(self.canvas)
+        self.buildScreenWids.setWindow(self.window)
+        self.buildScreenWids.setBuildTransfer(self.startBuildModel)
+
         self.idenScreenWids = IdentityScreenWidget(self.canvas)
         self.idenScreenWids.setWindow(self.window)
         self.idenScreenWids.setYesTransfer(self.IdenScreenToCheckinScreen)
@@ -131,9 +66,10 @@ class App():
 
     def recognitionScreen(self):
         self.recogScreen = RecognitionScreen(self.window)
-        self.recogScreen.startRecognition()
-        self.recogInfo, self.imgFrame = self.recogScreen.getRecogInfo()
-        self.RecogScreenToIdenScreen()
+        success = self.recogScreen.startRecognition()
+        if success:
+            self.recogInfo, self.imgFrame = self.recogScreen.getRecogInfo()
+            self.RecogScreenToIdenScreen()
     
     def identityScreen(self):
         self.idenScreenWids.enable()
@@ -146,7 +82,30 @@ class App():
     def MainScreenToRecogScreen(self):
         self.mainScreenWids.disable()
         self.window.after(500, self.recognitionScreen)
+    
+    def MainSreenToBuildScreen(self):
+        self.mainScreenWids.disable()
+        self.buildScreenWids.enable()
+
+    def startBuildModel(self):
+        self.buildScreenWids.setText("Building model...")
+        self.buildScreenWids.disableButton()
+        self.window.after(500, self.buildModel)
         
+    def buildModel(self):
+        modelName = self.buildScreenWids.getModel()
+        databaseFolder = self.buildScreenWids.getDirectory()
+        success = ModelBuilder(modelName, databaseFolder).build()
+        if success:
+            self.buildScreenWids.setText("Build Successfully!")
+        else:
+            self.buildScreenWids.setText("Build Failed!")
+        self.window.after(2000, self.BuildSreeenToMainScreen)
+
+    def BuildSreeenToMainScreen(self):
+        self.buildScreenWids.disable()
+        self.mainScreenWids.enable()
+
     def RecogScreenToIdenScreen(self):
         self.mainScreenWids.disable()
         self.identityScreen()

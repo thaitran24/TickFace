@@ -6,7 +6,7 @@ import math
 from PIL import Image
 
 class Detector():
-    def __init__(self, model_name='blazeface') -> None:
+    def __init__(self, model_name='BlazeFace') -> None:
         self.model = blazeface.loadModel()
     
     def detect(self, img):

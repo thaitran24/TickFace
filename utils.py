@@ -20,7 +20,7 @@ def getTime(dt):
 
 
 def getModelInfo():
-    file_name = 'model_info.json'
+    file_name = 'database/model_info.json'
     jfile = open(file_name)
     model_infos = json.load(jfile)
     return model_infos['model_name'], model_infos['database_folder'], model_infos['representation_folder']

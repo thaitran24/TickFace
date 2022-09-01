@@ -22,7 +22,7 @@ class RealnameScreenWidget():
             bg="#FFFCFC",
             highlightthickness=0,
             justify='center',
-            font=("Mplus1p Medium", 32 * -1)
+            font=("MS Sans Serif", 32 * -1)
         )
     
     def enable(self):
@@ -47,7 +47,7 @@ class RealnameScreenWidget():
             anchor="nw",
             text="Enter your real name",
             fill="#242424",
-            font=("Mplus1p Medium", 32 * -1)
+            font=("MS Sans Serif", 32 * -1)
         )
 
         self.entryBg = self.canvas.create_image(

@@ -1,5 +1,6 @@
 from pathlib import Path
-from tkinter import Button, PhotoImage
+from tkinter import DISABLED, Button, PhotoImage
+from tkinter.font import NORMAL
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
@@ -66,11 +67,13 @@ class IdentityScreenWidget():
             fill="#FFFFFF",
             outline=""
         )
+        self.enableButton()
     
     def disable(self):
-        self.canvas.delete('all')
+        self.disableButton()
         self.noButton.place_forget()
         self.yesButton.place_forget()
+        self.canvas.delete('all')
 
     def setYesTransfer(self, func):
         self.yesButton.configure(command=func)
@@ -79,13 +82,15 @@ class IdentityScreenWidget():
         self.noButton.configure(command=func)
     
     def setText(self, text):
+        textPixelLength = 16 * len(text)
+        x = 512 - textPixelLength / 2
         self.canvas.create_text(
-            316.0,
+            x,
             548.0,
             anchor="nw",
             text=text,
             fill="#242424",
-            font=("Mplus1p Medium", 32 * -1),
+            font=("MS Sans Serif", 32 * -1),
             justify='center'
         )
     
@@ -96,3 +101,11 @@ class IdentityScreenWidget():
             264.0,
             image=self.img
         )
+    
+    def enableButton(self):
+        self.yesButton.configure(state=NORMAL)
+        self.noButton.configure(state=NORMAL)
+    
+    def disableButton(self):
+        self.yesButton.configure(state=DISABLED)
+        self.noButton.configure(state=DISABLED)

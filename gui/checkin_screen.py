@@ -1,5 +1,6 @@
 from pathlib import Path
-from tkinter import Button, PhotoImage
+from tkinter import DISABLED, Button, PhotoImage
+from tkinter.font import NORMAL
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path("./assets")
@@ -54,7 +55,7 @@ class CheckinScreenWidget():
             anchor="nw",
             text="You wanna check-in or check-out?",
             fill="#242424",
-            font=("Mplus1p Medium", 32 * -1)
+            font=("MS Sans Serif", 32 * -1)
         )
         self.checkinButton.place(
             x=158.0,
@@ -68,11 +69,13 @@ class CheckinScreenWidget():
             width=250.0,
             height=80.0
         )
+        self.enableButton()
     
     def disable(self):
-        self.canvas.delete('all')
+        self.disableButton()
         self.checkinButton.place_forget()
         self.checkoutButton.place_forget()
+        self.canvas.delete('all')
     
     def setCheckinTransfer(self, func):
         self.checkinButton.configure(command=func)
@@ -90,3 +93,11 @@ class CheckinScreenWidget():
             264.0,
             image=self.img
         )
+    
+    def enableButton(self):
+        self.checkinButton.configure(state=NORMAL)
+        self.checkoutButton.configure(state=NORMAL)
+    
+    def disableButton(self):
+        self.checkinButton.configure(state=DISABLED)
+        self.checkoutButton.configure(state=DISABLED)
