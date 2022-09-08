@@ -1,1 +1,1 @@
-{"model_name": "Facenet", "database_folder": "/home/thaitran24/Programs/FaceRegModels/database_images", "representation_folder": "/home/thaitran24/Programs/FaceRegModels/represent/"}
+{"model_name": "Facenet", "database_folder": "/database_images", "representation_folder": "/represent/"}
