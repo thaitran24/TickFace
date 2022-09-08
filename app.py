@@ -61,7 +61,11 @@ class App():
         self.thanksScreenWidget.enable()
         self.database.writeLog(self.recogInfo, self.imgFrame)
         message = self.recogInfo['realname'] + ' ' + self.recogInfo['check'] + ' at ' + utils.getTime(self.recogInfo['time'])
-        slack_post.postMessage(message=message)
+        try:
+            slack_post.postMessage(message=message)
+        except:
+            print('Cannot send message')
+        
         self.window.after(3000, self.ThanksScreenToMainScreen)
 
     def recognitionScreen(self):
