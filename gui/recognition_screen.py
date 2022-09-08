@@ -62,8 +62,8 @@ class RecognitionScreen():
             success, frame = self.capture.read()
             if not success:
                 break
-            
-            frame = cv2.rotate(frame, cv2.ROTATE_180)
+
+            frame = cv2.rotate(frame, cv2.ROTATE_180)   # rotate 180 because of pi camera
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             if self.exitFlag:
                 return False
@@ -105,6 +105,9 @@ class RecognitionScreen():
         self.capture.release()
         cv2.destroyAllWindows()
         self.recogScreenWids.disable()
+    
+    def onRelease(self, func):
+        self.func = func
         
     def getRecogInfo(self):
         return self.recogInfo, self.imgFrame
