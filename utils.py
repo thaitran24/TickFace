@@ -3,6 +3,7 @@ import json
 import re
 import numpy as np
 import cv2
+import os
 from PIL import Image, ImageDraw
 from pathlib import Path
 
@@ -23,7 +24,7 @@ def getModelInfo():
     file_name = 'database/model_info.json'
     jfile = open(file_name)
     model_infos = json.load(jfile)
-    return model_infos['model_name'], model_infos['database_folder'], model_infos['representation_folder']
+    return model_infos['model_name'], os.getcwd() + model_infos['database_folder'], os.getcwd() + model_infos['representation_folder']
 
 
 def JPGtoPNG(npImg, size=(459, 461)):
