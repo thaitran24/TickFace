@@ -70,7 +70,7 @@ class App():
 
     def recognitionScreen(self):
         self.recogScreen = RecognitionScreen(self.window)
-        success = self.recogScreen.startRecognition()
+        self.recogScreen.startRecognition()
         self.recogInfo, self.imgFrame = self.recogScreen.getRecogInfo()
         self.RecogScreenToIdenScreen()
     
