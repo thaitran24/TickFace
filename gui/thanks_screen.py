@@ -18,7 +18,7 @@ class ThanksScreenWidget():
     def enable(self):
         self.canvas.create_image(
             512.0,
-            384.0,
+            360.0,
             image=self.thanksImg
         )
     

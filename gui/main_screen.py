@@ -46,13 +46,13 @@ class MainScreenWidget():
     def enable(self):
         self.canvas.create_image(
             512.0,
-            187.0,
+            156.0,
             image=self.logoImg
         )
 
         self.canvas.create_text(
             335.0,
-            384.0,
+            327.0,
             anchor="nw",
             text="TICKFACE",
             fill="#242424",
@@ -61,14 +61,14 @@ class MainScreenWidget():
 
         self.startButton.place(
             x=287.0,
-            y=511.0,
+            y=478.0,
             width=449.0,
             height=103.0
         )
 
         self.buildButton.place(
             x=335.0,
-            y=639.0,
+            y=612.0,
             width=354.0,
             height=72.0
         )

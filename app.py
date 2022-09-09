@@ -18,7 +18,7 @@ class App():
     def initLayout(self):
         self.window = Tk()
         self.window.title('TickFace')
-        self.window.geometry('1024x768')
+        self.window.geometry('1024x720')
         self.window.configure(bg='#00EFFF')
         self.window.resizable(False, False)
 

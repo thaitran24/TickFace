@@ -38,20 +38,20 @@ class CheckinScreenWidget():
     def enable(self):
         self.canvas.create_image(
             512.0,
-            264.0,
+            248.0,
             image=self.img
         )
         self.canvas.create_rectangle(
-            138.0,
-            522.0,
-            888.0,
-            622.0,
+            137.0,
+            498.0,
+            887.0,
+            598.0,
             fill="#FFFFFF",
             outline=""
         )
         self.canvas.create_text(
-            247.0,
-            548.0,
+            246.0,
+            524.0,
             anchor="nw",
             text="You wanna check-in or check-out?",
             fill="#242424",
@@ -59,13 +59,13 @@ class CheckinScreenWidget():
         )
         self.checkinButton.place(
             x=158.0,
-            y=649.0,
+            y=617.0,
             width=250.0,
             height=80.0
         )
         self.checkoutButton.place(
             x=617.0,
-            y=649.0,
+            y=617.0,
             width=250.0,
             height=80.0
         )
@@ -90,7 +90,7 @@ class CheckinScreenWidget():
         self.img = PhotoImage(file=imgPath)
         self.canvas.create_image(
             512.0,
-            264.0,
+            248.0,
             image=self.img
         )
     

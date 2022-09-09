@@ -41,29 +41,29 @@ class IdentityScreenWidget():
     def enable(self):
         self.canvas.create_image(
             512.0,
-            264.0,
+            248.0,
             image=self.img
         )
 
         self.yesButton.place(
-            x=265.0,
-            y=649.0,
+            x=266.0,
+            y=613.0,
             width=100.0,
             height=100.0
         )
 
         self.noButton.place(
-            x=659.0,
-            y=649.0,
+            x=660.0,
+            y=613.0,
             width=100.0,
             height=100.0
         )
 
         self.canvas.create_rectangle(
-            138.0,
-            522.0,
-            888.0,
-            622.0,
+            137.0,
+            498.0,
+            887.0,
+            598.0,
             fill="#FFFFFF",
             outline=""
         )
@@ -86,7 +86,7 @@ class IdentityScreenWidget():
         x = 512 - textPixelLength / 2
         self.canvas.create_text(
             x,
-            548.0,
+            524.0,
             anchor="nw",
             text=text,
             fill="#242424",
@@ -98,7 +98,7 @@ class IdentityScreenWidget():
         self.img = PhotoImage(file=imgPath)
         self.canvas.create_image(
             512.0,
-            264.0,
+            248.0,
             image=self.img
         )
     

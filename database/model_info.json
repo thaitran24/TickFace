@@ -1,1 +1,1 @@
-{"model_name": "Facenet", "database_folder": "/database_images/", "representation_folder": "/represent/"}
+{"model_name": "Facenet", "database_folder": "/database_images", "representation_folder": "/represent/"}

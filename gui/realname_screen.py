@@ -28,22 +28,22 @@ class RealnameScreenWidget():
     def enable(self):
         self.canvas.create_image(
             512.0,
-            264.0,
+            245.0,
             image=self.img
         )
 
         self.canvas.create_rectangle(
-            141.0,
-            521.0,
-            891.0,
-            621.0,
+            137.0,
+            497.0,
+            887.0,
+            597.0,
             fill="#FFFFFF",
             outline=""
         )
 
         self.canvas.create_text(
-            354.0,
-            547.0,
+            350.0,
+            523.0,
             anchor="nw",
             text="Enter your real name",
             fill="#242424",
@@ -52,13 +52,13 @@ class RealnameScreenWidget():
 
         self.entryBg = self.canvas.create_image(
             512.0,
-            686.0,
+            660.0,
             image=self.entryImg
         )
 
         self.entryButton.place(
             x=292.0,
-            y=656.0,
+            y=630.0,
             width=440.0,
             height=58.0
         )

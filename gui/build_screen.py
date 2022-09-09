@@ -93,40 +93,40 @@ class BuildScreenWidget():
     def enable(self):
         self.buildButton.place(
             x=335.0,
-            y=581.0,
+            y=553.0,
             width=354.0,
             height=72.0
         )
         self.chooseDirButton.place(
             x=93.0,
-            y=384.0,
+            y=351.0,
             width=354.0,
             height=103.0
         )
         self.chooseModelButton.place(
             x=575.0,
-            y=384.0,
+            y=351.0,
             width=354.0,
             height=103.0
         )
         self.canvas.create_image(
             512.0,
-            187.0,
+            163.0,
             image=self.logoImg
         )
         self.enableButton()
 
     def checkDir(self):
         self.canvas.create_image(
-            270.0,
-            529.0,
+            271.0,
+            496.0,
             image=self.checkImg
         )
     
     def checkModel(self):
         self.canvas.create_image(
-            752.0,
-            529.0,
+            753.0,
+            496.0,
             image=self.checkImg
         )
 
@@ -166,7 +166,7 @@ class BuildScreenWidget():
         self.canvas.delete(self.text)
         self.text = self.canvas.create_text(
             418.0,
-            681.0,
+            653.0,
             anchor="nw",
             text=text,
             fill="#242424",
