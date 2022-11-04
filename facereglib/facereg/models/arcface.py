@@ -3,7 +3,7 @@ from keras.engine import training
 import os
 import gdown
 
-def loadModel():
+def load_model():
 	base_model = ResNet34()
 	inputs = base_model.inputs[0]
 	arcface_model = base_model.outputs[0]

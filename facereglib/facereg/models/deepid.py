@@ -3,7 +3,7 @@ from keras.layers import Conv2D, Activation, Input, Add, MaxPooling2D, Flatten, 
 import os
 import gdown
 
-def loadModel():
+def load_model():
     input = Input(shape=(55, 47, 3))
 
     x = Conv2D(20, (4, 4), name='Conv1', activation='relu', input_shape=(55, 47, 3))(input)

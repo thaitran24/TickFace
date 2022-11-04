@@ -1,25 +1,17 @@
-from pathlib import Path
 from tkinter import PhotoImage
+from gui.access_path import relative_to_assets
 
-
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("./assets")
-
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
-class ThanksScreenWidget():
+class ResetScreen():
     def __init__(self, canvas):
         self.canvas = canvas
-        self.thanksImg = PhotoImage(
+        self.reset_img = PhotoImage(
             file=relative_to_assets("thanks.png"))
     
     def enable(self):
         self.canvas.create_image(
             512.0,
             360.0,
-            image=self.thanksImg
+            image=self.reset_img
         )
     
     def disable(self):

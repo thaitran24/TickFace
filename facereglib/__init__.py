@@ -1,0 +1,1 @@
+from facereglib.facereg.recognizer import Recognizer

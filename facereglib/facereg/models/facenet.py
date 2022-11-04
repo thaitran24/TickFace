@@ -526,7 +526,7 @@ def InceptionResNetV2(dimension = 128):
 
     return model
 
-def loadModel():
+def load_model():
     facenet_model = InceptionResNetV2()
 
     file_path = os.getcwd() + '/facereglib/facereg/weights/'

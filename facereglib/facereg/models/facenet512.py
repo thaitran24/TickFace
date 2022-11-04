@@ -2,7 +2,7 @@ from facereglib.facereg.models.facenet import InceptionResNetV2
 import os
 import gdown
 
-def loadModel():
+def load_model():
     facenet_model = InceptionResNetV2(dimension=512)
 
     file_path = os.getcwd() + '/facereglib/facereg/weights/'

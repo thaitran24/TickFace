@@ -1,42 +1,32 @@
-from pathlib import Path
 from tkinter import DISABLED, Button, PhotoImage
 from tkinter.font import NORMAL
+from gui.access_path import relative_to_assets
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("./assets")
-
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
-
-class IdentityScreenWidget():
-    def __init__(self, canvas):
+class IdentityScreen():
+    def __init__(self, canvas, window):
         self.canvas = canvas
+        self.canvas.master = window
 
         self.img = PhotoImage(
             file=relative_to_assets("image.png"))
 
-        self.yesImg = PhotoImage(
+        self.yes_img = PhotoImage(
             file=relative_to_assets("yes.png"))
-        self.yesButton = Button(
-            image=self.yesImg,
+        self.yes_button = Button(
+            image=self.yes_img,
             borderwidth=0,
             highlightthickness=0,
             relief="flat"
         )
 
-        self.noImg = PhotoImage(
+        self.no_img = PhotoImage(
             file=relative_to_assets("no.png"))
-        self.noButton = Button(
-            image=self.noImg,
+        self.no_button = Button(
+            image=self.no_img,
             borderwidth=0,
             highlightthickness=0,
             relief="flat"
         )
-        
-    def setWindow(self, window):
-        self.canvas.master = window
     
     def enable(self):
         self.canvas.create_image(
@@ -45,14 +35,14 @@ class IdentityScreenWidget():
             image=self.img
         )
 
-        self.yesButton.place(
+        self.yes_button.place(
             x=266.0,
             y=613.0,
             width=100.0,
             height=100.0
         )
 
-        self.noButton.place(
+        self.no_button.place(
             x=660.0,
             y=613.0,
             width=100.0,
@@ -71,19 +61,19 @@ class IdentityScreenWidget():
     
     def disable(self):
         self.disableButton()
-        self.noButton.place_forget()
-        self.yesButton.place_forget()
+        self.no_button.place_forget()
+        self.yes_button.place_forget()
         self.canvas.delete('all')
 
-    def setYesTransfer(self, func):
-        self.yesButton.configure(command=func)
+    def set_yes_btn_trans(self, func):
+        self.yes_button.configure(command=func)
     
-    def setNoTransfer(self, func):
-        self.noButton.configure(command=func)
+    def set_no_btn_trans(self, func):
+        self.no_button.configure(command=func)
     
-    def setText(self, text):
-        textPixelLength = 16 * len(text)
-        x = 512 - textPixelLength / 2
+    def set_text(self, text):
+        text_px_len = 16 * len(text)
+        x = 512 - text_px_len / 2
         self.canvas.create_text(
             x,
             524.0,
@@ -94,8 +84,8 @@ class IdentityScreenWidget():
             justify='center'
         )
     
-    def setImage(self, imgPath):
-        self.img = PhotoImage(file=imgPath)
+    def set_image(self, img_path):
+        self.img = PhotoImage(file=img_path)
         self.canvas.create_image(
             512.0,
             248.0,
@@ -103,9 +93,9 @@ class IdentityScreenWidget():
         )
     
     def enableButton(self):
-        self.yesButton.configure(state=NORMAL)
-        self.noButton.configure(state=NORMAL)
+        self.yes_button.configure(state=NORMAL)
+        self.no_button.configure(state=NORMAL)
     
     def disableButton(self):
-        self.yesButton.configure(state=DISABLED)
-        self.noButton.configure(state=DISABLED)
+        self.yes_button.configure(state=DISABLED)
+        self.no_button.configure(state=DISABLED)

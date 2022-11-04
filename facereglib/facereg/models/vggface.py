@@ -3,7 +3,7 @@ from keras.layers import Convolution2D, ZeroPadding2D, MaxPooling2D, Flatten, Dr
 import os
 import gdown
 
-def loadModel():
+def load_model():
     base_model = Sequential()
 
     base_model.add(ZeroPadding2D((1,1),input_shape=(224,224, 3)))

@@ -1,23 +1,17 @@
-from pathlib import Path
 from tkinter import END, Entry, PhotoImage
+from gui.access_path import relative_to_assets
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("./assets")
-
-
-def relative_to_assets(path: str) -> Path:
-    return ASSETS_PATH / Path(path)
-
-
-class RealnameScreenWidget():
-    def __init__(self, canvas):
+class RealnameScreen():
+    def __init__(self, canvas, window):
         self.canvas = canvas
+        self.canvas.master = window
+
         self.img = PhotoImage(
             file=relative_to_assets("image.png"))
 
-        self.entryImg = PhotoImage(
+        self.entry_img = PhotoImage(
             file=relative_to_assets("entry.png"))
-        self.entryButton = Entry(
+        self.entry_button = Entry(
             bd=0,
             bg="#FFFCFC",
             highlightthickness=0,
@@ -50,36 +44,33 @@ class RealnameScreenWidget():
             font=("MS Sans Serif", 32 * -1)
         )
 
-        self.entryBg = self.canvas.create_image(
+        self.entry_bg = self.canvas.create_image(
             512.0,
             660.0,
-            image=self.entryImg
+            image=self.entry_img
         )
 
-        self.entryButton.place(
+        self.entry_button.place(
             x=292.0,
             y=630.0,
             width=440.0,
             height=58.0
         )
 
-        self.entryButton.delete(0, END)
+        self.entry_button.delete(0, END)
     
     def disable(self):
         self.canvas.delete('all')
-        self.entryButton.place_forget()
+        self.entry_button.place_forget()
     
-    def setWindow(self, window):
-        self.canvas.master = window
+    def set_entry_btn_trans(self, func):
+        self.entry_button.bind('<Return>', func=func)
     
-    def setTransfer(self, func):
-        self.entryButton.bind('<Return>', func=func)
+    def get_entry(self):
+        return self.entry_button.get()
     
-    def getEntry(self):
-        return self.entryButton.get()
-    
-    def setImage(self, imgPath):
-        self.img = PhotoImage(file=imgPath)
+    def set_image(self, img_path):
+        self.img = PhotoImage(file=img_path)
         self.canvas.create_image(
             512.0,
             264.0,

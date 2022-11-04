@@ -12,38 +12,36 @@ from facereglib.facereg.models import deepid
 from facereglib.facereg.models import arcface
 from facereglib.facereg.models import facenet
 from facereglib.facereg.models import facenet512
-# from facereglib.facedet import detector
-from facereglib.facereg import detector
-
 from facereglib.utils import facereg_utils, distance
-
+from facereglib.facedet import detector
 
 class Recognizer():
-    def __init__(self, model_name, db_represent_path=None) -> None:
+    def __init__(self, model_name, representation_path=None) -> None:
         reg_models = {
-            'VGG=Face': vggface.loadModel,
-            'DeepFace': deepface.loadModel,
-            'DeepID': deepid.loadModel,
-            'ArcFace': arcface.loadModel,
-            'Facenet': facenet.loadModel,
-            'Facenet512': facenet512.loadModel
+            'VGG-Face': vggface.load_model,
+            'DeepFace': deepface.load_model,
+            'DeepID': deepid.load_model,
+            'ArcFace': arcface.load_model,
+            'Facenet': facenet.load_model,
+            'Facenet512': facenet512.load_model
         }
+
         base_model = reg_models.get(model_name)
         if not base_model:
-            raise ValueError('Invalid model_name passed - {}'.format(model_name))
+            raise ValueError("Invalid model_name passed - {}".format(model_name))
         
+        self.model_name = model_name
         self.recognizer = base_model()
         self.detector = detector.Detector()
-        self.model_name = model_name
-        self.db_represent_path = db_represent_path
-        self.is_db_build = True if db_represent_path != None else False
+        self.representation_path = representation_path
+        self.is_database_build = True if representation_path != None else False
 
     
     def find(self, img, distance_metric='cosine', threshold=0.3, top_rows=5, force_detection=True):
-        if not self.is_db_build:
+        if not self.is_database_build:
             raise FileNotFoundError("There is no database representation file. Please build database first by calling: buildDatabase()") 
 
-        representation_file = open(self.db_represent_path + 'representation.pkl', 'rb')
+        representation_file = open('{}representation.pkl'.format(self.representation_path), 'rb')
         representations = pickle.load(representation_file)
         df = pd.DataFrame(representations, columns=['identity', 'representation'])
         face = self.represent(img, force_detection=force_detection)
@@ -66,7 +64,6 @@ class Recognizer():
         n_rows = min(len(df.index), top_rows)
         return df.head(n_rows)
 
-
     def represent(self, img, force_detection=True):
         if not force_detection:
             return img
@@ -80,7 +77,6 @@ class Recognizer():
         # face = preprocess.normalize(face, normalization=self.model_name)
         return self.recognizer.predict(face)[0].tolist()
     
-
     def verify(self, img1, img2, threshold=0.2, distance_metric='cosine', force_detection=True):
         face1 = self.represent(img1, force_detection=force_detection)
         face2 = self.represent(img2, force_detection=force_detection)
@@ -96,26 +92,28 @@ class Recognizer():
         dist = np.float64(dist)
         return True if dist <= threshold else False
     
-
-    def buildDatabase(self, db_path, db_represent_path):
-        if not os.path.isdir(db_path):
-            print("Database path db_path - ", db_path, " not exist")
+    def build_database(self, database_path, representation_path):
+        if not os.path.isdir(database_path):
+            print("Database path database_path - {} not exist".format(database_path))
             return False
 
         file_name = 'representation.pkl'
-        if os.path.exists(db_represent_path + '/' + file_name):
-            f = open(db_represent_path + '/' + file_name, 'rb')
+        if os.path.exists(os.path.join(representation_path, file_name)):
+            f = open(os.path.join(representation_path, file_name), 'rb')
             representations = pickle.load(f)
         
         employees = []
-        for rt, dr, fs in os.walk(db_path):
+        ids = []
+        for rt, dr, fs in os.walk(database_path):
             for file in fs:
                 if ('.jpg' in file.lower()) or ('.png' in file.lower()):
-                    exact_path = rt + '/' + file
+                    exact_path = os.path.join(rt, file)
                     employees.append(exact_path)
+                    id = rt.split('/')[-1]
+                    ids.append(id)
 
         if len(employees) == 0:
-            raise ValueError("There is no image in ", db_path," folder! Validate .jpg or .png files exist in this path.")
+            raise ValueError("There is no image in {} folder! Validate .jpg or .png files exist in this path.".format(database_path))
         
         representations = []
         pbar = tqdm(range(0, len(employees)), desc='Building representation')
@@ -124,20 +122,28 @@ class Recognizer():
             employee = employees[index]
             img = Image.open(employee)
             img = np.asarray(img)
-            representations.append([employee, self.represent(img)])
+            representations.append([ids[index], self.represent(img)])
         
-        Path(db_represent_path).mkdir(parents=True, exist_ok=True)
-        self.db_represent_path = db_represent_path + '/' + file_name
-        representation_file = open(self.db_represent_path, 'wb')
+        Path(representation_path).mkdir(parents=True, exist_ok=True)
+        self.representation_path = os.path.join(representation_path, file_name)
+        representation_file = open(self.representation_path, 'wb')
         pickle.dump(representations, representation_file)
-        self.is_db_build = True
+        self.is_database_build = True
         representation_file.close()
         return True
     
-
-    def recognize(self, img, threshold=0.3, distance_metric='cosine', force_detection=True):
-        if not self.is_db_build:
+    def recognize(self, img, threshold=0.3, distance_metric='cosine', force_detection=True, return_dict=True):
+        if not self.is_database_build:
             raise FileNotFoundError("There is no database representation file. Please build database first by calling: buildDatabase()") 
 
-        df = self.find(img, distance_metric, threshold, top_rows=5, force_detection=force_detection)
-        return df
+        df = self.find(img, distance_metric, threshold, top_rows=1, force_detection=force_detection)
+        
+        if not return_dict:
+            return df
+        
+        if len(df.index > 0):
+            dist = df['distance'][0]
+            id = df['identity'][0]
+            return dict({'id': id, 'distance': dist})
+        
+        return dict({'id': 'stranger', 'distance': 0})

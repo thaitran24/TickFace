@@ -1,0 +1,1 @@
+from facereglib.facedet.detector import Detector

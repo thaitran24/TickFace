@@ -3,7 +3,7 @@ from keras.layers import Convolution2D, LocallyConnected2D, MaxPooling2D, Flatte
 import os
 import gdown
 
-def loadModel():
+def load_model():
     base_model = Sequential()
 
     base_model.add(Convolution2D(32, (11, 11), activation='relu', name='C1', input_shape=(152, 152, 3)))

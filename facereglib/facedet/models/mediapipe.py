@@ -1,14 +1,19 @@
 import numpy as np
 import math
-import mediapipe as mp
 import cv2
 from PIL import Image
 from facereglib.utils import distance
 
-class Detector():
-    def __init__(self, min_conf=0.5):
-        mp_face_detection = mp.solutions.face_detection
-        self.model = mp_face_detection.FaceDetection(min_detection_confidence=min_conf)
+def load_model():
+    import mediapipe as mp
+    min_conf = 0.5
+    mp_face_detection = mp.solutions.face_detection
+    model = mp_face_detection.FaceDetection(min_detection_confidence=min_conf)
+    return model
+
+class Mediapipe():
+    def __init__(self):
+        self.model = load_model()
     
     def detect(self, img):
         results = self.model.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))

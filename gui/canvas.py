@@ -1,6 +1,6 @@
 from tkinter import Canvas
 
-def MyCanvas():
+def MainCanvas():
     return Canvas(
         bg = "#00EFFF",
         height = 720,
