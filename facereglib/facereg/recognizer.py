@@ -16,7 +16,7 @@ from facereglib.utils import facereg_utils, distance
 from facereglib.facedet import detector
 
 class Recognizer():
-    def __init__(self, model_name, representation_path=None) -> None:
+    def __init__(self, model_name='Facenet', detector='BlazeFace', representation_path=None) -> None:
         reg_models = {
             'VGG-Face': vggface.load_model,
             'DeepFace': deepface.load_model,
@@ -32,7 +32,7 @@ class Recognizer():
         
         self.model_name = model_name
         self.recognizer = base_model()
-        self.detector = detector.Detector()
+        self.detector = detector.Detector(model_name=detector)
         self.representation_path = representation_path
         self.is_database_build = True if representation_path != None else False
 
