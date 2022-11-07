@@ -8,7 +8,7 @@ class Detector():
     def __init__(self, model_name='BlazeFace') -> None:
         det_models = {
             'BlazeFace': BlazeFace,
-            'DeepFace': Mediapipe
+            'Mediapipe': Mediapipe
         }
         base_model = det_models.get(model_name)
         if not base_model:
